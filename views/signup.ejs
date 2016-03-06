@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="/views/css/style.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+    <a href="/login">
+        <button class="link">Login</button>
+    </a>
+    
+        <!-- show any messages that come back with authentication -->
+        <% if (message.length > 0) { %>
+            <div class="error"><%= message %></div>
+        <% } %>
+    
+        <!-- SIGNUP FORM -->
+        <form class="auth" action="/signup" method="post">
+            <div class="inputs">
+                <input type="text" class="" name="email" placeholder="Email"> 
+                <br/>
+                <input type="password" class="" name="password" placeholder="Password">
+            </div>
+            <button type="submit" class="submit">Signup</button>
+        </form>
+
+    
+</body>
+</html>
