@@ -1,6 +1,12 @@
 * Nightlife App
 
-** ToDo List
+** ToDo List [2/6]
+- [X] Signup for Yelp API keys
+- [X] Hash out user permissions
+- [ ] views
+- [ ] routes
+- [ ] controllers
+- [ ] model - implement data expiration
 
 ** Objective: Build a full stack JavaScript app that is functionally similar to this: http://whatsgoinontonight.herokuapp.com/ and deploy it to Heroku. [1/8]
 - [ ] As an unauthenticated user, I can view all bars in my area.
@@ -8,10 +14,61 @@
 - [ ] As an authenticated user, I can remove myself from a bar if I no longer want to go there.
 - [ ] As an unauthenticated user, when I login I should not have to search again.
    
+** Design Ideas
+*** use ajax except for auth
+*** mongo permits data expiration: 
+**** https://docs.mongodb.org/manual/tutorial/expire-data/ 
+*** automatically generate list of bars? from ip? geolocate?
+*** store location in session?
+*** YELP
+**** https://www.yelp.com/developers/manage_api_keys
+**** QUERY: https://api.yelp.com/v2/search/?location=97267&limit=10&category_filter=bars
+**** {businesses[{name, url, image_url, id, is_closed}]}
+**** npm install : https://github.com/olalonde/node-yelp
+
+
+
 ** User Permissions
+- only authenticated users can rsvp
 
 ** M. V. C.
+
 *** Views
+- Home Page
+  - nav bar (nightlife login/signup/logout)
+  - headers 
+  - location form
+    - ajax post
+    - update list
+      - {imgURL, name, link, description, RSVP button, businessId}
+  - rsvp button
+    - ajax post businessId
+    - update count callback
 
 *** Controllers
-
+- Server
+  - receive location as POST
+    - store data in req.sessions
+    - request data from yelp API
+    - format data from YELP
+    - check database for matching business ids
+    - add counts if any
+    - RESPONSE transformed data
+  - recieve rsvp as POST
+    - check database for matching business id
+      - upsert id and count
+      - increment
+    - RESPONSE {businessId, updatedCount} to client side callback
+- Client
+  - session data available?
+    - trigger location form
+  - Location Form
+    - submit location via ajax
+    - recieve JSON data in callback
+      - populate lists with data
+  - RSVP button
+    - state (going / not)
+    - submit business id via ajax
+    - recieve JSON data in callback
+      - {businessId, updatedCount}
+      - 
