@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <link href="/views/css/style.css" rel="stylesheet" type="text/css">
+    <title>nightLife</title>
+  </head>
+  
+  <body>
+
+    <div class="nav">
+      <span>nightLife</span>
+      <% if (user) { %>
+        <a href="/logout">Logout</a>
+      <% } else {  %>
+        <a href="/login">Login</a>
+        <a href="/signup">Signup</a>
+     <% } %>
+        <a href="/">Home</a>
+    </div>
+    
+    <div class="meat">
+
+      <h1>Make plans for toNight</h1>
+
+      <form action="/location" method="POST">
+        <input id="inputLocation" name="location" type="text" required="required" value="Enter your location"/>
+        <button id="submitLocation">Submit</button>
+      </form>
+
+      <ul id="listParent"></ul>
+    </div>
+    
+    <script type="text/javascript" src="/views/js/client.js"></script>
+
+  </body>
+</html>

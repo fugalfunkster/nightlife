@@ -1,0 +1,5 @@
+{
+  "preset": "google",
+  "maxErrors": null,
+  "fix": true,
+}

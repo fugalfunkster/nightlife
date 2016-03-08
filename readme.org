@@ -38,7 +38,7 @@
   - nav bar (nightlife login/signup/logout)
   - headers 
   - location form
-    - ajax post
+    - ajax get
     - update list
       - {imgURL, name, link, description, RSVP button, businessId}
   - rsvp button
@@ -47,14 +47,14 @@
 
 *** Controllers
 - Server
-  - receive location as POST
+  - receive location as GET
     - store data in req.sessions
     - request data from yelp API
     - format data from YELP
     - check database for matching business ids
     - add counts if any
     - RESPONSE transformed data
-  - recieve rsvp as POST
+  - receive rsvp as POST
     - check database for matching business id
       - upsert id and count
       - increment

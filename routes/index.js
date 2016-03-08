@@ -14,8 +14,8 @@ module.exports = function(app, passport) {
   }
 
   app.route('/')
-    .get(isLoggedIn, function(req, res) {
-      res.sendFile(path + '/views/index.html');
+    .get(function(req, res) {
+      res.render('index.ejs', {user: req.user});
     });
 
   app.route('/login')
@@ -38,12 +38,6 @@ module.exports = function(app, passport) {
       failureFlash: true
     }));
 
-  app.route('/profile')
-    .get(isLoggedIn, function(req, res) {
-      console.log(req.user);
-      res.render('profile.ejs', {user: req.user.local.email});
-    });
-
   app.route('/oauth/github')
     .get(passport.authenticate('github'));
 
@@ -58,5 +52,13 @@ module.exports = function(app, passport) {
       req.logout();
       res.redirect('/login');
     });
+
+  app.route('/location/:location')
+    .post(function(req, res) {
+      var location = req.params.location;
+      res.end(location);
+    });
+
+  // route for rsvp POST
 
 };
