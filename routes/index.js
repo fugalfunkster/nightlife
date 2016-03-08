@@ -74,6 +74,11 @@ module.exports = function(app, passport) {
       });
     });
 
-  // route for rsvp POST
+  app.route('/rsvp/:id')
+    .post(function(req, res) {
+      var barId = req.params.id;
+      var rsvp = {id: barId, count: 1 };
+      res.end(JSON.stringify(rsvp));
+    });
 
 };
