@@ -1,9 +1,18 @@
 /* jslint node: true */
 'use strict';
 
+var Yelp = require('yelp');
+
 var path = process.cwd();
 
 module.exports = function(app, passport) {
+
+  var yelp = new Yelp({
+    consumer_key: process.env.YELP_CONSUMER_KEY,
+    consumer_secret: process.env.YELP_CONSUMER_SECRET,
+    token: process.env.YELP_TOKEN,
+    token_secret: process.env.YELP_TOKEN_SECRET,
+  });
 
   function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
@@ -56,7 +65,13 @@ module.exports = function(app, passport) {
   app.route('/location/:location')
     .post(function(req, res) {
       var location = req.params.location;
-      res.end(location);
+      yelp.search({term: 'bars', location: location, limit: 10},
+                  function(err, data) {
+        if (err) {
+          return console.log(error);
+        }
+        res.end(JSON.stringify(data));
+      });
     });
 
   // route for rsvp POST

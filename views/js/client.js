@@ -9,8 +9,6 @@
 //  each list item contains
 //  div img name<url> description rsvp-button<count - id>
 
-
-
 window.onload = function() {
 
   var inputLocation = document.getElementById('inputLocation');
@@ -23,9 +21,7 @@ window.onload = function() {
     }
   };
 
-  submitLocation.addEventListener('click', sendLocation, false);
-
-  function sendLocation(e) {
+  submitLocation.onclick = function sendLocation(e) {
 
     e.stopPropagation();
     e.preventDefault();
@@ -46,7 +42,18 @@ window.onload = function() {
   };
 
   function listBars(listOfBars) {
-    console.log('successful call from: ' + listOfBars);
+    var parsedList = JSON.parse(listOfBars);
+    var mappedList = parsedList.businesses.map(function(each) {
+      if (!each.is_closed) {
+        var bar = {};
+        bar.id = each.id;
+        bar.imageUrl = each.image_url;
+        bar.name = each.name;
+        bar.url = each.url;
+        return bar;
+      }
+    });
+    console.log(mappedList);
     // loop
     // var bar = listParent.createElement('li');
     // bar.innerH;
