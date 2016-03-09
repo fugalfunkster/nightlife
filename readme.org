@@ -1,12 +1,16 @@
 * Nightlife App
 
-** ToDo List [2/6]
+** ToDo List [2/5]
 - [X] Signup for Yelp API keys
 - [X] Hash out user permissions
-- [ ] views
-- [ ] routes
-- [ ] controllers
-- [ ] model - implement data expiration
+- [ ] refactor
+  - [ ] simplify routes
+  - [ ] simplify controllers
+- [ ] rsvp button
+  - [ ] identify user rsvps, use color to demark in view
+  - [ ] add and subtract rsvps
+- [ ] query database for rsvps on location search
+- [ ] implement data expiration
 
 ** Objective: Build a full stack JavaScript app that is functionally similar to this: http://whatsgoinontonight.herokuapp.com/ and deploy it to Heroku. [1/8]
 - [ ] As an unauthenticated user, I can view all bars in my area.
@@ -14,6 +18,7 @@
 - [ ] As an authenticated user, I can remove myself from a bar if I no longer want to go there.
 - [ ] As an unauthenticated user, when I login I should not have to search again.
    
+
 ** Design Ideas
 *** use ajax except for auth
 *** mongo permits data expiration: 
@@ -30,6 +35,7 @@
 
 ** User Permissions
 - only authenticated users can rsvp
+
 
 ** M. V. C.
 
@@ -71,4 +77,3 @@
     - submit business id via ajax
     - recieve JSON data in callback
       - {businessId, updatedCount}
-      - 

@@ -2,8 +2,8 @@
 'use strict';
 
 var Yelp = require('yelp');
-
 var path = process.cwd();
+var Rsvp = require('../models/rsvps');
 
 module.exports = function(app, passport) {
 
@@ -11,20 +11,22 @@ module.exports = function(app, passport) {
     consumer_key: process.env.YELP_CONSUMER_KEY,
     consumer_secret: process.env.YELP_CONSUMER_SECRET,
     token: process.env.YELP_TOKEN,
-    token_secret: process.env.YELP_TOKEN_SECRET,
+    token_secret: process.env.YELP_TOKEN_SECRET
   });
 
   function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
     } else {
-      res.redirect('/login');
+      res.send({redirect: '/login'});
     }
   }
 
   app.route('/')
     .get(function(req, res) {
-      res.render('index.ejs', {user: req.user});
+      console.log(req.session.location);
+      res.render('index.ejs', {user: req.user,
+                               sessionLocation: req.session.location});
     });
 
   app.route('/login')
@@ -65,6 +67,7 @@ module.exports = function(app, passport) {
   app.route('/location/:location')
     .post(function(req, res) {
       var location = req.params.location;
+      req.session.location = location;
       yelp.search({term: 'bars', location: location, limit: 10},
                   function(err, data) {
         if (err) {
@@ -75,10 +78,21 @@ module.exports = function(app, passport) {
     });
 
   app.route('/rsvp/:id')
-    .post(function(req, res) {
+    .post(isLoggedIn, function(req, res) {
       var barId = req.params.id;
-      var rsvp = {id: barId, count: 1 };
-      res.end(JSON.stringify(rsvp));
+      var userId = req.user.id;
+      console.log(req.user);
+      var rsvp = {};
+      Rsvp.findOneAndUpdate({barId : barId},
+                            {$inc: {count: 1}, $push: {userIds: userId}},
+                            {upsert: true, 'new': true},
+                            function(err, doc) {
+        if (err) {
+          return console.log(error);
+        }
+        console.log(doc);
+        res.end(JSON.stringify(doc));
+      });
     });
 
 };
