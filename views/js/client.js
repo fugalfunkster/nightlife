@@ -2,88 +2,67 @@
 
 window.onload = function() {
 
-  if (typeof sessionLocation !== 'undefined') {
-    console.log(sessionLocation);
-    sendLocationRequest(sessionLocation);
-  }
-
   var inputLocation = document.getElementById('inputLocation');
   var submitLocation = document.getElementById('submitLocation');
   var listParent = document.getElementById('listParent');
-  var buttons;
 
-  inputLocation.onclick = function clearDefaultValue() {
+  if (sessionLocation !== void 0) {
+    inputLocation.value = sessionLocation;
+    requestBarsFor(sessionLocation);
+  }
+
+  inputLocation.onclick = function clearDefaultInputValue() {
     if (inputLocation.value  === 'Enter your location') {
       inputLocation.setAttribute('value', '');
     }
   };
 
   submitLocation.onclick = function sendLocation(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    var formLocation = inputLocation.value;
-    sendLocationRequest(formLocation);
+    arrestEvent(e);
+    var userLocation = inputLocation.value;
+    requestBarsFor(userLocation);
   };
 
-  function sendLocationRequest(location) {
-    console.log(location);
-    var locationURL = '/location/' + location;
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        listBars(xhr.response);
-      }
-    };
-    xhr.open('POST', locationURL, true);
-    xhr.send();
+  function requestBarsFor(userLocation) {
+    var requestUrl = '/location/' + userLocation;
+    ajax('POST', requestUrl, listBars);
   }
 
   function listBars(listOfBars) {
-    listParent.innerHTML = "";
-    var parsedList = JSON.parse(listOfBars);
-    var mappedList = parsedList.businesses.map(function(each) {
-      if (!each.is_closed) {
-        console.log(each);
-        each.rsvp = each.rsvp || 0;
+    listParent.innerHTML = '';
+    var parsedListOfBars  = JSON.parse(listOfBars);
+    var mappedListOfBars = parsedListOfBars.businesses.map(function(bar) {
+      if (!bar.is_closed) {
+        bar.rsvp = bar.rsvp || 0;
         listParent.innerHTML = listParent.innerHTML +
           '<li class="bars">' +
-          '  <img alt="Picture of '+ each.name + '" src="' + each.image_url + '"/>' +
-          '  <a href=' + each.url + '><h3>' + each.name + '</h3></a>' +
-          '  <p>' + each.snippet_text + '</p>' +
-          '  <button id="' + each.id + '">RSVPs <span>' + each.rsvp + '</span></button>' +
+          '  <img alt="Picture of ' + bar.name + '" src="' + bar.image_url + '"/>' +
+          '  <a href=' + bar.url + '><h3>' + bar.name + '</h3></a>' +
+          '  <p>' + bar.snippet_text + '</p>' +
+          '  <button id="' + bar.id + '">RSVPs <span>' + bar.rsvp + '</span></button>' +
           '</li>';
       }
     });
-    updateButtonEventHandlers();
+    updateRsvpEventHandlers();
   }
 
-  function updateButtonEventHandlers() {
-    var buttons = document.getElementsByTagName('button');
-    for (var i = 1; i < buttons.length; i++) {
-      var button = buttons[i];
-      button.onclick = rsvp;
+  function updateRsvpEventHandlers() {
+    var rsvpButtons = document.getElementsByTagName('button');
+    for (var i = 1; i < rsvpButtons.length; i++) {
+      var button = rsvpButtons[i];
+      button.onclick = postRsvp;
     }
   }
 
-  function rsvp(e) {
-    // console.log('click');
-    e.stopPropagation();
-    e.preventDefault();
+  function postRsvp(e) {
+    arrestEvent(e);
     var barId = this.getAttribute('id');
     var rsvpUrl = '/rsvp/' + barId;
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        updateRSVP(xhr.response);
-      }
-    };
-    xhr.open('POST', rsvpUrl, true);
-    xhr.send();
+    ajax('POST', rsvpUrl, updateRsvpButton);
   };
 
-  function updateRSVP(rsvpString) {
-    var rsvp = JSON.parse(rsvpString);
-    console.log(rsvp);
+  function updateRsvpButton(rsvpConfirmation) {
+    var rsvp = JSON.parse(rsvpConfirmation);
     if (typeof rsvp.redirect == 'string') {
       window.location = rsvp.redirect;
     }
@@ -91,5 +70,21 @@ window.onload = function() {
     rsvpButton.innerHTML = 'RSVPs <span>' + rsvp.count + '</span>';
 
   };
+
+  function arrestEvent(e) {
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  function ajax(method, url, cb) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        cb(xhr.response);
+      }
+    };
+    xhr.open(method, url, true);
+    xhr.send();
+  }
 
 };
