@@ -31,15 +31,16 @@ window.onload = function() {
   function listBars(listOfBars) {
     listParent.innerHTML = '';
     var parsedListOfBars  = JSON.parse(listOfBars);
-    var mappedListOfBars = parsedListOfBars.businesses.map(function(bar) {
+    var mappedListOfBars = parsedListOfBars.map(function(bar) {
       if (!bar.is_closed) {
         bar.rsvp = bar.rsvp || 0;
+        bar.userRsvp = bar.userRsvp || 'notgoing';
         listParent.innerHTML = listParent.innerHTML +
           '<li class="bars">' +
           '  <img alt="Picture of ' + bar.name + '" src="' + bar.image_url + '"/>' +
           '  <a href=' + bar.url + '><h3>' + bar.name + '</h3></a>' +
           '  <p>' + bar.snippet_text + '</p>' +
-          '  <button id="' + bar.id + '">RSVPs <span>' + bar.rsvp + '</span></button>' +
+          '  <button id="' + bar.id + '" class="' + bar.userRsvp + '">RSVPs <span>' + bar.rsvp + '</span></button>' +
           '</li>';
       }
     });

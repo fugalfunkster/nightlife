@@ -68,12 +68,37 @@ module.exports = function(app, passport) {
     .post(function(req, res) {
       var location = req.params.location;
       req.session.location = location;
+      // console.log(location);
       yelp.search({term: 'bars', location: location, limit: 10},
-                  function(err, data) {
+                  function(err, bars) {
         if (err) {
           return console.log(error);
         }
-        res.end(JSON.stringify(data));
+
+        Rsvp.find({count: {$gt : 0}}, function(err, savedBars) {
+          if(err) {
+            console.log(err);
+          }
+          var barsWithRsvps = bars.businesses.map(function(bar) {
+            // console.log(bar);
+            savedBars.map(function(savedBar) {
+              if (bar.id === savedBar.barId) {
+                bar.rsvp = savedBar.count;
+                if (req.user) {
+                  var listOfUsers = savedBar.userIds;
+                  listOfUsers.forEach(function(user) {
+                    if (user == req.user.id) {
+                      bar.userRsvp = 'going';
+                    }
+                  });
+                }
+              }
+            });
+            return bar;
+          });
+          // console.log(barsWithRsvps);
+          res.end(JSON.stringify(barsWithRsvps));
+        });
       });
     });
 
@@ -81,16 +106,14 @@ module.exports = function(app, passport) {
     .post(isLoggedIn, function(req, res) {
       var barId = req.params.id;
       var userId = req.user.id;
-      console.log(req.user);
       var rsvp = {};
       Rsvp.findOneAndUpdate({barId : barId},
                             {$inc: {count: 1}, $push: {userIds: userId}},
-                            {upsert: true, 'new': true},
+                            {upsert: true, 'new': true, setDefaultsOnInsert: true},
                             function(err, doc) {
         if (err) {
           return console.log(error);
         }
-        console.log(doc);
         res.end(JSON.stringify(doc));
       });
     });

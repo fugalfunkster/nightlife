@@ -18,6 +18,10 @@ input {
     padding: 10px;
 }
 
+.going {
+    background-color: lightgreen;
+}
+
 .inputs {
     width: 100%;
 }
