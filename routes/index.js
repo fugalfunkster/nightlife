@@ -107,9 +107,25 @@ module.exports = function(app, passport) {
       var barId = req.params.id;
       var userId = req.user.id;
       var rsvp = {};
-      Rsvp.findOneAndUpdate({barId : barId},
+      Rsvp.findOneAndUpdate({barId: barId},
                             {$inc: {count: 1}, $push: {userIds: userId}},
                             {upsert: true, 'new': true, setDefaultsOnInsert: true},
+                            function(err, doc) {
+        if (err) {
+          return console.log(error);
+        }
+        res.end(JSON.stringify(doc));
+      });
+    });
+
+ app.route('/remove/:id')
+    .post(isLoggedIn, function(req, res) {
+      var barId = req.params.id;
+      var userId = req.user.id;
+      var rsvp = {};
+      Rsvp.findOneAndUpdate({barId: barId},
+                            {$inc: {count: -1}, $pull: {userIds: userId}},
+                            {'new': true},
                             function(err, doc) {
         if (err) {
           return console.log(error);

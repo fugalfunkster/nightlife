@@ -36,11 +36,11 @@ window.onload = function() {
         bar.rsvp = bar.rsvp || 0;
         bar.userRsvp = bar.userRsvp || 'notgoing';
         listParent.innerHTML = listParent.innerHTML +
-          '<li class="bars">' +
+          '<li class="bars ' + bar.userRsvp + '">' +
           '  <img alt="Picture of ' + bar.name + '" src="' + bar.image_url + '"/>' +
           '  <a href=' + bar.url + '><h3>' + bar.name + '</h3></a>' +
           '  <p>' + bar.snippet_text + '</p>' +
-          '  <button id="' + bar.id + '" class="' + bar.userRsvp + '">RSVPs <span>' + bar.rsvp + '</span></button>' +
+          '  <button id="' + bar.id + '">RSVPs <span>' + bar.rsvp + '</span></button>' +
           '</li>';
       }
     });
@@ -58,8 +58,13 @@ window.onload = function() {
   function postRsvp(e) {
     arrestEvent(e);
     var barId = this.getAttribute('id');
-    var rsvpUrl = '/rsvp/' + barId;
-    ajax('POST', rsvpUrl, updateRsvpButton);
+    if (this.parentNode.getAttribute('class') == 'going') {
+      var removeUrl = '/remove/' + barId;
+      ajax('POST', removeUrl, updateRsvpButton);
+    } else {
+      var rsvpUrl = '/rsvp/' + barId;
+      ajax('POST', rsvpUrl, updateRsvpButton);
+    }
   };
 
   function updateRsvpButton(rsvpConfirmation) {
@@ -69,7 +74,11 @@ window.onload = function() {
     }
     var rsvpButton = document.getElementById(rsvp.barId);
     rsvpButton.innerHTML = 'RSVPs <span>' + rsvp.count + '</span>';
-
+    if (rsvpButton.parentNode.getAttribute('class') == 'going') {
+      rsvpButton.parentNode.className = 'notgoing';
+    } else {
+      rsvpButton.parentNode.className = 'going';
+    }
   };
 
   function arrestEvent(e) {
