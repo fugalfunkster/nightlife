@@ -1,22 +1,27 @@
 * Nightlife App
 
-** ToDo List [2/5]
+** ToDo List [5/7]
 - [X] Signup for Yelp API keys
 - [X] Hash out user permissions
 - [ ] refactor
   - [ ] simplify routes
   - [ ] simplify controllers
-- [ ] rsvp button
-  - [ ] identify user rsvps, use color to demark in view
-  - [ ] add and subtract rsvps
-- [ ] query database for rsvps on location search
-- [ ] implement data expiration
+- [X] rsvp button
+  - [X] identify user rsvps, use color to demark in view
+  - [X] add and subtract rsvps
+- [X] query database for rsvps on location search
+- [X] implement data expiration
+- [ ] make it look pretty
 
-** Objective: Build a full stack JavaScript app that is functionally similar to this: http://whatsgoinontonight.herokuapp.com/ and deploy it to Heroku. [1/8]
-- [ ] As an unauthenticated user, I can view all bars in my area.
-- [ ] As an authenticated user, I can add myself to a bar to indicate I am going there tonight.
-- [ ] As an authenticated user, I can remove myself from a bar if I no longer want to go there.
-- [ ] As an unauthenticated user, when I login I should not have to search again.
+
+** Objective: Build a full stack JavaScript app that is functionally similar to this: http://whatsgoinontonight.herokuapp.com/ and deploy it to Heroku. [4/4]
+- [X] As an unauthenticated user, I can view all bars in my area.
+  - [X] All bars means 10 bars...
+- [X] As an authenticated user, I can add myself to a bar to indicate I am going there tonight.
+  - [X] Users can see which bars they've confirmed
+- [X] As an authenticated user, I can remove myself from a bar if I no longer want to go there.
+- [X] As an unauthenticated user, when I login I should not have to search again.
+  - [X] Location memory persists as session data
    
 
 ** Design Ideas
@@ -24,7 +29,7 @@
 *** mongo permits data expiration: 
 **** https://docs.mongodb.org/manual/tutorial/expire-data/ 
 *** automatically generate list of bars? from ip? geolocate?
-*** store location in session?
+*** store location in session
 *** YELP
 **** https://www.yelp.com/developers/manage_api_keys
 **** QUERY: https://api.yelp.com/v2/search/?location=97267&limit=10&category_filter=bars
