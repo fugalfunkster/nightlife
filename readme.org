@@ -4,7 +4,9 @@
 This app uses the Yelp API to show users a list of bars in their vicinity. Each bar also reports the  number of users who have "rsvp'd" for tonight. Authenticated users can "rsvp," indicating that they intend to go to a bar. I setup the Mongo database to automatically expire RSVPs daily. 
 
 ** Installation and Demonstration
-This app is no longer deployed, and this repo does not contain a required .env file. Github OAuth keys, and Yelp API keys are required to run this app. I can spin this up on Cloud9 by request.
+This app is currently deployed at https://nightlife-fugalfunkster.c9users.io/
+
++This app is no longer deployed, and this repo does not contain a required .env file. Github OAuth keys, and Yelp API keys are required to run this app. I can spin this up on Cloud9 by request.+
 
 ** Dependencies 
 - Node.js
