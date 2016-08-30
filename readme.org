@@ -1,17 +1,23 @@
 * Nightlife App
 
-** ToDo List [5/7]
-- [X] Signup for Yelp API keys
-- [X] Hash out user permissions
-- [ ] refactor
-  - [ ] simplify routes
-  - [ ] simplify controllers
-- [X] rsvp button
-  - [X] identify user rsvps, use color to demark in view
-  - [X] add and subtract rsvps
-- [X] query database for rsvps on location search
-- [X] implement data expiration
-- [ ] make it look pretty
+** Description
+This app uses the Yelp API to show users a list of bars in their vicinity. Each bar also reports the  number of users who have "rsvp'd" for tonight. Authenticated users can "rsvp," indicating that they intend to go to a bar. I setup the Mongo database to automatically expire RSVPs daily. 
+
+** Installation and Demonstration
+This app is no longer deployed, and this repo does not contain a required .env file. Github OAuth keys, and Yelp API keys are required to run this app. I can spin this up on Cloud9 by request.
+
+** Dependencies 
+- Node.js
+- Express
+- MongoDB / Mongoose
+- Passport
+- See also: package.json
+
+
+** ToDo List [0/3]
+- [ ] refactor routes
+- [ ] refactor controllers
+- [ ] refactor styles
 
 
 ** Objective: Build a full stack JavaScript app that is functionally similar to this: http://whatsgoinontonight.herokuapp.com/ and deploy it to Heroku. [4/4]
@@ -22,6 +28,7 @@
 - [X] As an authenticated user, I can remove myself from a bar if I no longer want to go there.
 - [X] As an unauthenticated user, when I login I should not have to search again.
   - [X] Location memory persists as session data
+  - [X] Persisted data expires within 24 hours
    
 
 ** Design Ideas
